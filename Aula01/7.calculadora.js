@@ -23,13 +23,13 @@ function calcula(num1, num2, operacao){
         case "/":
             res = num1 / num2;
             break;
+        // operação potência
         case "^":
             res = num1 ** num2;
             break;
         default:
             console.log("A operação é inválida");
             return;
-            break;
     }
 
     console.log("O resultado da operação " + num1 + " " + operacao 
