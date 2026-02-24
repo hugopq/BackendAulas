@@ -9,6 +9,7 @@ function letraOcorre(frase, letra){
 
     return contador;
 }
+
 function letraOcorreSplit(frase, letra){
 
     return frase.toLowerCase().split(letra.toLowerCase()).length - 1;

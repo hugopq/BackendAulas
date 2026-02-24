@@ -9,6 +9,7 @@ function contaVogais(frase){
 
     return contador;
 }
+
 let frase = "Hoje é domingo";
 console.log("A frase: " + frase);
 console.log("contém " + contaVogais(frase) + " vogais");
