@@ -50,7 +50,7 @@ module.exports = {
     },
 
     reverse: (array) => {
-        arrayRev = [];
+        let arrayRev = [];
         for (let i = array.length-1; i >= 0; i--) {
             arrayRev.push(array[i]); 
         }
@@ -58,7 +58,7 @@ module.exports = {
     },
     
     swap: (array, index1, index2) => {
-        array2 = [];
+        let array2 = [];
         for (let i = 0; i < array.length; i++) {
             array2.push(array[i]);
         }
@@ -79,7 +79,7 @@ module.exports = {
     },
     
     concatenate: (a1, a2) => {
-        array = [];
+        let array = [];
         for (let i = 0; i < a1.length; i++) {
             array.push(a1[i]);
         }
