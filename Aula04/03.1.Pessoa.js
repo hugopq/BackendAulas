@@ -11,11 +11,15 @@ class Pessoa{
     }
 }
 
-let joao = new Pessoa("joão", "Gomes");
-let maria = new Pessoa("maria", "Silva");
+module.exports = Pessoa;
 
-joao.greet();
-maria.greet()
+// let joao = new Pessoa("joão", "Gomes");
+// let maria = new Pessoa("maria", "Silva");
 
-console.log(joao.__proto__ == maria.__proto__);
-console.log(maria.__proto__);
+// joao.greet();
+// maria.greet()
+
+// console.log(joao.__proto__ == maria.__proto__);
+// console.log(maria.__proto__);       //mostra {}
+// console.log(Object.getOwnPropertyNames(maria.__proto__)); 
+
