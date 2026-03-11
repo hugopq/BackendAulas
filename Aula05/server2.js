@@ -8,13 +8,18 @@ const port = 3000;
 const file = "persons.json";
 
 // guardar pessoas em memória (variável global)
-let pessoas = null;
-let lastId = 0;
+// let pessoas = null;
+// let lastId = 0;
 
 // função para ler o ficheiro
 function lerPessoas(){
     let dados = fs.readFileSync(file, "utf8");
     return JSON.parse(dados).Data;
+}
+
+function guardarPessoas(dados){
+  let dadosEscrita = {Data: dados};
+  fs.writeFileSync(file, JSON.stringify(dadosEscrita));
 }
 
 // middleware
@@ -28,11 +33,13 @@ app.get('/', (req, res) => {
 
 //  /users      GET     empty         Show list of all the persons.
 app.get('/users', (req, res) => {
+  let pessoas = lerPessoas();
   res.send(pessoas);
 });
 
 //  /users      POST    JSON String   Add details of new person. 
 app.post('/users', (req, res) => {
+  let pessoas = lerPessoas();
   //required
     const { firstname, lastname, gender, age, profession } = req.body;
 
@@ -42,11 +49,14 @@ app.post('/users', (req, res) => {
     }
     lastId++;
     pessoas.push({ id: lastId, firstname, lastname, gender, age, profession });
+
+    guardarPessoas(pessoas);
     res.send(pessoas);
 });
 
 //  /users/:id  DELETE  empty         Delete an existing person.
 app.delete('/users/:id', (req, res) => {
+  let pessoas = lerPessoas();
   const id = Number(req.params.id);
 
   // filtrar pessoas com id diferente do pedido
@@ -57,13 +67,15 @@ app.delete('/users/:id', (req, res) => {
     res.status(400).send("Erro: A pessoas indicada não existe");  
   }
   else{
-    pessoas = pessoas2;
-    res.send(pessoas);
+    // pessoas = pessoas2;
+    guardarPessoas(pessoas2);
+    res.send(pessoas2);
   }
 });
 
 //  /users/:id  GET     empty         Show details of a person.
 app.get('/users/:id', (req, res) => {
+  let pessoas = lerPessoas();
   const id = Number(req.params.id);
   let pessoa = pessoas.filter(p => p.id === id)[0];
 
@@ -76,6 +88,7 @@ app.get('/users/:id', (req, res) => {
 });
 //  /users/:id  PUT     JSON String   Update details of a person.
 app.put('/users/:id',(req, res) => {
+  let pessoas = lerPessoas();
   const id = Number(req.params.id);
 
   // ir buscar a pessoa pelo id
@@ -98,6 +111,7 @@ app.put('/users/:id',(req, res) => {
     pessoa.age = age;
     pessoa.profession = profession;
 
+    guardarPessoas(pessoas);
     res.send(pessoa);
   }
 });
