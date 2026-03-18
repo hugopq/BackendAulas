@@ -1,3 +1,4 @@
+const { log } = require('console');
 const express = require('express');
 const fs = require('fs');   // para ler e escrever ficheiros
 const app = express();
@@ -15,20 +16,34 @@ function readLogs(){
 
 // função para guardar o ficheiro
 function writeLogs(dados){
-    fs.writeFileSync(file,dados);
+    fs.writeFileSync(file,dados,{flag: 'a'});
 }
+
+// // 3. criar middleware de registo
+// app.use((req, res, next) => {    
+//     // let ficheiro
+//     let logs = readLogs();
+//     // adicionar novo log
+//     // 6. colocar no log data, methos e path separados por virgulas
+//     logs += "\n" + new Date().toISOString() + ",\t" +  req.method 
+//         + ",\t" + req.path + ", ";
+//     // voltar a guardar ficheiro
+//     writeLogs(logs);
+    
+//     console.log(logs);
+//     // continua para as rotas
+//     next();
+// });
 
 // 3. criar middleware de registo
 app.use((req, res, next) => {    
-    // let ficheiro
-    let logs = readLogs();
-    // adicionar novo log
-    // 6. colocar no log data, methos e path separados por virgulas
+    // usando append em vez de writeFile
     logs += "\n" + new Date().toISOString() + ",\t" +  req.method 
         + ",\t" + req.path + ", ";
-    // voltar a guardar ficheiro
-    writeLogs(logs);
     
+    fs.appendFileSync(file, log);
+    // fs.writeFileSync(file,log,{flag:'a'});
+   
     console.log(logs);
     // continua para as rotas
     next();
@@ -87,7 +102,8 @@ app.get('/logsDL',(req,res)=>{
     // res.send(logs);
     res.writeHead(200, {  
         'Content-Type': 'text/plain',
-        'Content-Disposition': 'attachment; filename="ficheiroDeLogs.txt"'
+        'Content-Disposition': 'attachment; '
+        + 'filename="ficheiroDeLogs.txt"'
      })
     res.end(logs);
 });
@@ -96,6 +112,16 @@ app.get('/logsDL',(req,res)=>{
 app.get('/logsDL2',(req,res)=>{
     // const logs = readLogs();
     res.download(file,'ficheiroDeLogs.txt');
+});
+
+// 9
+app.get('/clear',(req,res)=>{
+    if (fs.existsSync(file)) {
+        fs.unlinkSync(file);
+        res.send('Log eliminado.');
+    } else {
+        res.status(404).send('Ficheiro de log não encontrado.');
+    }
 });
 
 app.listen(port, () => {
