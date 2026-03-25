@@ -67,11 +67,13 @@ app.get('/users',(req,res)=>{
 })
 
 // 4.b.ii
-app.post('/users',(req,res)=>{
-
-    console.log(req.body);
+app.post('/users',(req,res) => {
 
     const { Firstname, Lastname, Profession, Age } = req.body;
+
+    if( !Firstname || !Lastname || !Profession || !Age){
+        return res.status(400).end("Dados obrigatórios em falta");
+    }
     // const Firstname = req.body.Firstname;
     const query = "INSERT INTO users "
         + "(Firstname, Lastname, Profession, Age) "
@@ -86,6 +88,97 @@ app.post('/users',(req,res)=>{
     })
 });
 
+// 4.b.iii
+app.delete('/users',(req,res) => {
+    const { id } = req.body;
+
+    const query = "DELETE FROM users WHERE id = ?";
+
+    connection.query(query,[id],(err, result) =>{
+        if (err) {
+            console.error('Erro:', err.message);
+            return res.status(500).end("ocorreu um erro");
+        }
+        res.json({ linhasAfetadas: result.affectedRows });
+    });
+});
+
+// 4.b.iv
+app.delete('/users/:id',(req,res) => {
+    const id  = req.params.id;
+
+    const query = "DELETE FROM users WHERE id = ?";
+
+    connection.query(query,[id],(err, result) =>{
+        if (err) {
+            console.error('Erro:', err.message);
+            return res.status(500).end("ocorreu um erro");
+        }
+        res.json({ linhasAfetadas: result.affectedRows });
+    });
+});
+
+// 4.b.v
+app.get('/users/:id',(req,res) => {
+    const id = req.params.id;   //buscar id aos parametros
+    const query = "SELECT * FROM users WHERE id = ?";   //criar query
+
+    connection.query(query,[id],(err, result) =>{   //establecer ligação 
+        if (err) {  
+            console.error('Erro:', err.message);
+            return res.status(500).end("ocorreu um erro");
+        }
+
+        // caso não exista
+        if(!result.length){
+            return res.status(404).end("user não encontrado");
+        }
+
+        res.json({ resultado: result[0]});
+    });
+});
+
+// 4.b.vi
+app.get('/users/:age/:profession',(req,res) => {
+    const { age, profession } = req.params;
+    const query = "SELECT * FROM users WHERE Age = ? AND Profession = ?";  
+
+    connection.query(query,[age, profession],(err, result) =>{
+        if (err) {  
+            console.error('Erro:', err.message);
+            return res.status(500).end("ocorreu um erro");
+        }
+
+        // caso não exista
+        if(!result.length){
+            return res.status(404).end("não existem utilizadores com essa idade e profissão");
+        }
+        
+        res.json({ resultado: result});
+    });
+});
+
+// 4.b.vii
+app.put('/users/:id',(req,res)=>{
+    const id = req.params.id;
+    const { Firstname, Lastname, Profession, Age } = req.body;
+
+    const query = "UPDATE users SET "
+        + "Firstname = ?,"
+        + "Lastname = ?,"
+        + "Profession = ?,"
+        + "Age = ? "
+        +"WHERE id = ?";
+
+    connection.query(query,[Firstname, Lastname, Profession, Age, id],(err, result) =>{
+        if (err) {  
+            console.error('Erro:', err.message);
+            return res.status(500).end("ocorreu um erro");
+        }
+
+        res.redirect('/users/' + id);
+    });    
+});
 
 app.listen(port, ()=>{
     console.log("Server Started");
