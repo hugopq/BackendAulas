@@ -1,0 +1,11 @@
+{
+  "title": "The Hitchhiker's Guide to the Galaxy",
+  "isbn": "978-0345391803",
+  "genre": "Science Fiction",
+  "review": 5,
+  "synopsis": "After the Earth is demolished to make way for a hyperspace bypass, Arthur Dent is swept into a journey across the universe.",
+  "pages": 224,
+  "price": 14,
+  "published": "1979-10-12",
+  "comment": "{\"user\": \"ford\", \"text\": \"Don't panic. Just read it.\", \"rating\": 5}"
+}
