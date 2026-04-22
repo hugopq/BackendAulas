@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Car = sequelize.define('User',{
+const Car = sequelize.define('Car',{
     Brand: {
         type: DataTypes.STRING, 
         allowNull: false
@@ -13,7 +13,7 @@ const Car = sequelize.define('User',{
     LicensePlate: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true 
+        unique: true, 
     },
     Color: {
         type: DataTypes.STRING
@@ -31,5 +31,10 @@ const Car = sequelize.define('User',{
     tableName: 'cars',
     timestamps: true
 });
+ 
+Car.validarMatricula = function(matricula){
+    const regex = /^([A-Z]{2}-\d{2}-\d{2}|\d{2}-\d{2}-[A-Z]{2}|\d{2}-[A-Z]{2}-\d{2}|[A-Z]{2}-\d{2}-[A-Z]{2})$/i;
+    return regex.test(matricula);
+}
 
 module.exports = Car;
