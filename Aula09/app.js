@@ -1,5 +1,7 @@
 const express = require('express');
 const Car = require('./models/Car');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocs = require('./swagger-docs.json');
 
 const sequelize = require('./config/database');
 
@@ -30,15 +32,22 @@ sequelize.sync({ force: true }) //force:true - obriga a eliminar e recriar a bas
 const PORT = 3000;
 const app = express();
 
+// 6.d Adicione ao app.js o código necessário para 
+// para utilizar o middleware do swagger-ui-express
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 app.use(express.json());
 
 //endpoints
-// 5.a. istar todos os carros existentes na tabela 
+// 5.a. listar todos os carros existentes na tabela 
 // Cars e devolver a resposta no body
 app.get("/cars", async (req,res) => {
     const id = req.query.id;
-    // if(id)
-    //     res.redirect(300,`/cars/findById`);
+    if(id){
+        const url = `/cars/findById?id=${encodeURIComponent(id).toString()}`;
+        console.log(`redirecting to ${url}`);
+        return res.redirect(302,url);
+    }
 
     const cars = await Car.findAll();
     res.json(cars);
