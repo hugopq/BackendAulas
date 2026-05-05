@@ -1,5 +1,8 @@
 const {sequelize, Book, User, Loan} = require('./models');
-// const sequelize = require('./config/databse');
+// swagger
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocs = require('./swagger-docs.json');
+
 
 var createError = require('http-errors');
 var express = require('express');
@@ -8,7 +11,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 // rotas:
-var indexRouter = require('./routes/index');
+var loansRouter = require('./routes/loans');
 var usersRouter = require('./routes/users');
 var booksRouter = require('./routes/books');
 
@@ -24,6 +27,9 @@ sequelize.sync({ force: true }) //force:true - obriga a eliminar e recriar a bas
         console.log("erro ao aceder à BD");
     });
 
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -35,7 +41,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // uso das rotas:
-app.use('/', indexRouter);
+app.use('/loans', loansRouter);
 app.use('/users', usersRouter);
 app.use('/books', booksRouter);
 
